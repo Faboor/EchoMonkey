@@ -72,15 +72,20 @@ def read_msgs_intent():
   unread_threads = filter(lambda thread: thread.thread_id not in session.attributes['read'],
                           get_unread_threads())
 
-  response = []
-  for thread in unread_threads:
-    response.append("In conversation " + add_with(thread) + "."
-                    + ". ".join(get_unread_msgs(thread) + "."))
-    session.attributes['read'].append(thread.thread_id)
-  if response:
-    return statement(response)
-  else:
-    return statement("You have no unread messages.")
+  empty, unread_threads = empty_generator(unread_threads)
+  if empty:
+    return statement("You have no more unread messages.")
+
+  thread = next(unread_threads)
+  response = ("In conversation " + add_with(thread)
+              + get_thread_name(thread) + ". "
+              + ". ".join(get_unread_msgs(thread)) + ".")
+
+  session.attributes['read'].append(thread.thread_fbid)
+  session.attributes['question'] = REPLY_CONTINUE
+  return (question(response + "Would you like to reply or continue?")
+          .reprompt("Alternatively, you can just mark as read and move on."))
+            .reprompt("Would you like me to continue reading unread messages?"))
 
 
 @ask.session_ended
