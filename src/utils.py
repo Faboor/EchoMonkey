@@ -33,4 +33,3 @@ def empty_generator(gen):
   except StopIteration:
     return True, gen
   return False, chain([first], gen)
-

@@ -52,21 +52,22 @@ def check_unread():
 
 @ask.intent("AMAZON.YesIntent")
 def yes_intent():
-  app.logger.info("Launch intent registered")
+  app.logger.info("YesIntent registered")
   if 'question' in session.attributes:
     if session.attributes['question'] == READ_MSGS:
+      app.logger.info("Interpreted as ReadIntent")
       return read_msgs_intent()
 
 
 @ask.intent("AMAZON.NoIntent")
 def no_intent():
-  app.logger.info("Launch intent registered")
+  app.logger.info("NoIntent registered")
   return session_end()
 
 
 @ask.intent("ReadMsgsIntent")
 def read_msgs_intent():
-  app.logger.info("Read intent registered")
+  app.logger.info("ReadIntent registered")
 
   unread_threads = filter(lambda thread: thread.thread_id not in session.attributes['read'],
                           get_unread_threads())
