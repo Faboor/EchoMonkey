@@ -48,24 +48,26 @@ def get_unread_threads(new_client=False):
 
 def get_unread_msgs(thread):
   is_group = thread.thread_type == 2
-  msgs = client.getThreadInfo(thread.thread_fbid, 0,
-                              end=thread.unread_count - 1,
-                              thread_type='group' if is_group else 'user')
+  # app.logger.debug(str(thread.unread_count))
+  msgs = reversed(client.getThreadInfo(thread.thread_fbid, 0,
+                                       end=thread.unread_count,
+                                       thread_type='group' if is_group else 'user'))
+  dump = next(msgs)
   messages = []
   if is_group:
     last_poster = None
-    for msg in reversed(msgs):
+    for msg in msgs:
       message = ""
       if is_user_msg(msg):
         if msg.author != last_poster:
           last_poster = msg.author
-          message += polish(msg.author) + " said: "
-        message += msg.body + ("." if not msg.has_attachment else ". This message has an attachment.")
+          message += polish(get_user_name(clean_fbid(msg.author))) + " wrote: "
+        message += msg.body + ("" if not msg.has_attachment else ". This message has an attachment")
       else:
         message = msg.log_message_body
       messages.append(message)
   else:
-    for msg in reversed(msgs):
+    for msg in msgs:
       if is_user_msg(msg):
         message = msg.body + ("." if not msg.has_attachment else ". This message has an attachment.")
       else:
