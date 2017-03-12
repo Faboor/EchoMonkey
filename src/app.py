@@ -117,6 +117,7 @@ def reply_intent(msg):
   return statement("I did something wrong, I am sorry")
 
 
+#@ask.intent(AMAZON.)
 
 
 @ask.session_ended
