@@ -69,7 +69,7 @@ def no_intent():
 def read_msgs_intent():
   app.logger.info("ReadIntent registered")
 
-  unread_threads = filter(lambda thread: thread.thread_id not in session.attributes['read'],
+  unread_threads = filter(lambda t: t.thread_id not in session.attributes['read'],
                           get_unread_threads())
 
   empty, unread_threads = empty_generator(unread_threads)
@@ -89,7 +89,7 @@ def read_msgs_intent():
 
 @ask.intent("RepeatIntent")
 def repeat_intent():
-  dump = session.attributes['read'].pop(-1)
+  session.attributes['read'].pop(-1)
   return read_msgs_intent()
 
 
