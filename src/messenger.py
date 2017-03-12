@@ -1,6 +1,14 @@
-from fbchat import Client
+import fbchat as fb
 from config import *
 from utils import *
+
+
+class Client(fb.Client):
+  def markAsRead(self, userID):
+    data = {"ids[%s]" % userID: 'true'}
+    r = self._post(fb.client.ReadStatusURL, data)
+    return r.ok
+
 
 client = None
 
