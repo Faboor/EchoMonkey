@@ -1,7 +1,9 @@
 from unidecode import unidecode as udc
+from itertools import chain
 
 # Session States
 READ_MSGS = 0
+REPLY_CONTINUE = 1
 
 # Flags
 NEW_CLIENT = True
@@ -23,3 +25,12 @@ def add_with(thread):
 
 def is_user_msg(msg):
   return msg.action_type == "ma-type:user-generated-message"
+
+
+def empty_generator(gen):
+  try:
+    first = next(gen)
+  except StopIteration:
+    return True, gen
+  return False, chain([first], gen)
+
