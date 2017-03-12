@@ -14,7 +14,7 @@ def homepage():
 
 @ask.on_session_started
 def session_start():
-  app.logger.debug("session start")
+  app.logger.debug("Session started")
   return launch()
 
 
@@ -89,24 +89,28 @@ def read_msgs_intent():
 
 @ask.intent("RepeatIntent")
 def repeat_intent():
+  app.logger.info("RepeatRequest registered")
   session.attributes['read'].pop(-1)
   return read_msgs_intent()
 
 
 @ask.intent("ResetIntent")
 def reset_intent():
+  app.logger.info("ResetRequest registered")
   session.attributes['read'] = []
   return check_unread()
 
 
 @ask.intent("MarkIntent")
 def mark_intent():
+  app.logger.info("MarkRequest registered")
   mark_read(client.markAsRead(session.attributes['read'][-1]))
   return read_msgs_intent()
 
 
 @ask.intent("ReplyIntent", mapping={'msg': 'Message'})
 def reply_intent(msg):
+  app.logger.info("ReplyRequest registered")
   if not msg or len(msg) == 0:
     return question("Sorry, what is your message?").reprompt("Could you repeat your message?")
   if send_msg(msg, session.attributes['read'][-1]):
@@ -117,11 +121,12 @@ def reply_intent(msg):
   return statement("I did something wrong, I am sorry")
 
 
-#@ask.intent(AMAZON.)
+# @ask.intent(AMAZON.)
 
 
 @ask.session_ended
 def session_end():
+  app.logger.info("Ended session")
   return statement("Bye, bye!")
 
 
