@@ -1,0 +1,31 @@
+{
+  "intents": [
+    {
+      "intent": "ReadMsgsIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
+      "intent": "ReplyIntent",
+      "slots": [
+        {
+          "name": "Message",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "intent": "RepeatIntent"
+    },
+    {
+      "intent": "ResetIntent"
+    },
+    {
+      "intent": "MarkIntent"
+    }
+  ]
+}

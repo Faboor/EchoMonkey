@@ -1,0 +1,26 @@
+ReadMsgsIntent read
+ReadMsgsIntent read messages
+ReadMsgsIntent continue
+ReadMsgsIntent next
+ReadMsgsIntent what does he want
+ReadMsgsIntent what does she want
+ReadMsgsIntent what do they want
+RepeatIntent repeat
+RepeatIntent again
+RepeatIntent read again
+RepeatIntent come again
+RepeatIntent couldn't hear
+RepeatIntent could not hear
+RepeatIntent it's too noisy
+RepeatIntent it's too loud
+ResetIntent start from beginning
+ResetIntent read all unread messages again
+ResetIntent read all again
+ResetIntent repeat all
+ReplyIntent reply {Message}
+ReplyIntent send {Message}
+ReplyIntent send a massage {Message}
+ReplyIntent respond {Message}
+ReplyIntent respond with a massage {Message}
+ReplyIntent respond with a massage that {Message}
+ReplyIntent I said {Message}
