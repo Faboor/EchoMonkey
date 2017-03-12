@@ -1,6 +1,7 @@
 import fbchat as fb
 from config import *
 from utils import *
+from time import time
 
 
 class Client(fb.Client):
@@ -11,12 +12,34 @@ class Client(fb.Client):
 
 
 client = None
+last_login = 0
+
+
+def login():
+  global last_login, client
+  if time() - last_login < LOGIN_WINDOW:
+    # app.logger.debug("Faking login")
+    while client is None:
+      pass
+    return True
+
+  last_login = time()
+  try:
+    # app.logger.debug("Attempting to login")
+    client = Client(USERNAME, PASSWORD, debug=DEBUG, max_retries=LOGIN_RETRIES)
+    # app.logger.info("Login successful")
+
+    return True
+  except:
+    # app.logger.error("Login failed, check username/password")
+    return False
 
 
 def get_unread_threads(new_client=False):
   global client
-  if new_client:
-    client = Client(USERNAME, PASSWORD, debug=DEBUG, max_retries=LOGIN_RETRIES)
+  if new_client or client is None or time() - last_login > FORCE_RELOG_WINDOW:
+    if not login():
+      return []
 
   for thread in client.getThreadList(0):
     if not thread.mute_until and thread.unread_count:
