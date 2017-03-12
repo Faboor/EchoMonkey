@@ -85,7 +85,38 @@ def read_msgs_intent():
   session.attributes['question'] = REPLY_CONTINUE
   return (question(response + "Would you like to reply or continue?")
           .reprompt("Alternatively, you can just mark as read and move on."))
+
+
+@ask.intent("RepeatIntent")
+def repeat_intent():
+  dump = session.attributes['read'].pop(-1)
+  return read_msgs_intent()
+
+
+@ask.intent("ResetIntent")
+def reset_intent():
+  session.attributes['read'] = []
+  return check_unread()
+
+
+@ask.intent("MarkIntent")
+def mark_intent():
+  mark_read(client.markAsRead(session.attributes['read'][-1]))
+  return read_msgs_intent()
+
+
+@ask.intent("ReplyIntent", mapping={'msg': 'Message'})
+def reply_intent(msg):
+  if not msg or len(msg) == 0:
+    return question("Sorry, what is your message?").reprompt("Could you repeat your message?")
+  if send_msg(msg, session.attributes['read'][-1]):
+    session.attributes['question'] = READ_MSGS
+    return (question("Message: " + msg + ", was sent successfully. "
+                     + "Would you like me to continue reading unread messages?")
             .reprompt("Would you like me to continue reading unread messages?"))
+  return statement("I did something wrong, I am sorry")
+
+
 
 
 @ask.session_ended
