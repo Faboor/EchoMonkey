@@ -14,24 +14,36 @@ def homepage():
 
 @ask.on_session_started
 def session_start():
-  return check_unread()
+  app.logger.debug("session start")
+  return launch()
 
 
 @ask.launch
+def launch():
+    app.logger.info("LaunchRequest registered")
+    return check_unread()
+
+
 def check_unread():
-  app.logger.info("Launch intent registered")
-  unread_threads = get_unread_threads(NEW_CLIENT)
-  if not unread_threads:
+  if not login():
+    return statement("I was unable to log you in. Please check your username and password configuration.")
+  unread_threads = get_unread_threads()
+
+  app.logger.debug("unread_threads retrieved")
+  no_unread, unread_threads = empty_generator(unread_threads)
+  if no_unread:
     return statement("You have no unread messages.")
     #      question("You have no unread messages. Would you like to write anyone?")
     #        .reprompt("Would you like to send a message?")
 
-  response = ("You have"
+  response = ("You have "
               + ', '.join([(str(thread.unread_count)
                             + " unread messages in conversation "
                             + add_with(thread)
                             + get_thread_name(thread))
-                           for thread in unread_threads()]))
+                           for thread in unread_threads])
+              + ". ")
+  app.logger.debug("response built")
   session.attributes['question'] = READ_MSGS
   session.attributes['read'] = []
   return (question(response + "Would you like to hear them?")
