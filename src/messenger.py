@@ -94,3 +94,11 @@ def get_thread_name(thread):
 
 def get_user_name(uid):
   return polish(client.getUserInfo(uid)['name'])
+
+
+def mark_read(thread_id):
+  client.markAsRead(thread_id)
+
+
+def send_msg(msg, to_id):
+  return client.send(to_id, message=msg)
